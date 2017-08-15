@@ -4,51 +4,51 @@ import './App.css';
 
 class App extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      contacts: [
-        {
-          "id": 1,
-          "profilePhoto" : "http://www.joshfinnie.com/assets/images/josh-tm.jpeg",
-          "name": "Gbenga",
-          "lastMessage": "Bro smart: what i think this should be...",
-          "chats": [
-            {
-              "activeUser" : "i will come to school soon",
-              "receiver":  "i will be there too.. just give me few minutes"
-            }
-          ]
-        },
-        {
-          "id": 2,
-          "profilePhoto" : "http://loremflickr.com/g/320/240/paris",
-          "name": "Tayo",
-          "lastMessage": "Bro smart: what i think this should be...",
-          "chats": [
-            {
-              "activeUser" : "i will come to school soon",
-              "receiver":  "i will be there too.. just give me few minutes"
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "profilePhoto" : "https://s.yimg.com/pw/images/buddyicon11_r.png#76029035@N02",
-          "name": "uno",
-          "lastMessage": "Bro smart: what i think this should be...",
-          "chats": [
-            {
-              "activeUser" : "i will come to school soon",
-              "receiver":  "i will be there too.. just give me few minutes"
-            }
-          ]
-        },
+  // constructor(props){
+  //   super(props);
+  //   this.state = {
+  //     contacts: [
+  //       {
+  //         "id": 1,
+  //         "profilePhoto" : "http://www.joshfinnie.com/assets/images/josh-tm.jpeg",
+  //         "name": "Gbenga",
+  //         "lastMessage": "Bro smart: what i think this should be...",
+  //         "chats": [
+  //           {
+  //             "activeUser" : "i will come to school soon",
+  //             "receiver":  "i will be there too.. just give me few minutes"
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         "id": 2,
+  //         "profilePhoto" : "http://loremflickr.com/g/320/240/paris",
+  //         "name": "Tayo",
+  //         "lastMessage": "Bro smart: what i think this should be...",
+  //         "chats": [
+  //           {
+  //             "activeUser" : "i will come to school soon",
+  //             "receiver":  "i will be there too.. just give me few minutes"
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         "id": 3,
+  //         "profilePhoto" : "https://s.yimg.com/pw/images/buddyicon11_r.png#76029035@N02",
+  //         "name": "uno",
+  //         "lastMessage": "Bro smart: what i think this should be...",
+  //         "chats": [
+  //           {
+  //             "activeUser" : "i will come to school soon",
+  //             "receiver":  "i will be there too.. just give me few minutes"
+  //           }
+  //         ]
+  //       },
       
-      ]
-    }
+  //     ]
+  //   }
 
-  }
+  // }
 
   // getChats = (event, id) => {
   //    event.preventDefault();
@@ -77,6 +77,32 @@ class App extends Component {
   // }
 
 
+  constructor() {
+    super()
+    this.state = {items:[],messages:[]}
+  }
+  componentWillMount() {
+    fetch("https://whatsappdemo.herokuapp.com/api/accounts/all").then(res => {
+      return res.json()
+    }).then(data => {
+      console.log(data)
+      this.setState({items: data})
+    })
+
+
+    fetch("https://whatsappdemo.herokuapp.com/api/message/all").then(res => {
+      return res.json()
+    }).then(data => {
+      console.log(data)
+      this.setState({messages: data})
+    })
+
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
    
 
 
@@ -102,14 +128,21 @@ class App extends Component {
           </div>
           <div className="ContactsList">
            
-            <div className="Contact">
-              <div className="ContactAvi">
-                <img src="http://placehold.it/40x40" />
+            {
+              this.state.items.map(contact => (
+              <div className="Contact" key={contact._id} >
+                <div className="ContactAvi">
+                  <img src="http://placehold.it/40x40" />
+                </div>
+                <div className="ContactName">
+                  {contact.fullname}
+                  <p>{contact.phone}</p>
+                </div>
+                
               </div>
-              <div className="ContactName">
-                Segebeee
-              </div>
-            </div>
+              ))
+            }
+            
 
           </div>
         </div>
@@ -137,41 +170,39 @@ class App extends Component {
           </div>
 
           <div className="Chats">
-            <div className="Chat">
-              <div className="ChatUserName">
-                Segebee
-              </div>
-              <div className="ChatMessage">
-                Hello how are you
-              </div>
-            </div>
-           <div className="Chat">
-              <div className="ChatUserName">
-                Segebee
-              </div>
-              <div className="ChatMessage">
-                Hello how are you
-              </div>
-            </div>
-            <div className="Chat">
-              <div className="ChatUserName">
-                Segebee
-              </div>
-              <div className="ChatMessage">
-                Hello how are you
-              </div>
-            </div>
+            
+            {
+              this.state.messages.map(item => (
+                <div className="talk-bubble tri-right left-top">
+                  <div className="ChatUserName">
+                    {item.messageby}
+                  </div>
+
+                  <div className="talk-text">
+                    <p>{item.message}</p>
+                    <p className="dateMsg">{new Date(item.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              
+              ))
+            }
+            
+            
+            
+            
           </div>
 
           <div className="ChatInputBar">
             <div className="Smileys">
-              
+              <img src="http://placehold.it/40x40" />
             </div>
             <div className="ChatInput">
-              <input className="ChatBox" />
+              <form onSubmit={this.handleSubmit}>
+                <input className="ChatBox" />
+              </form>
             </div>
             <div className="Microphone">
-              
+              <img src="http://placehold.it/40x40" />
             </div>
           </div>
 

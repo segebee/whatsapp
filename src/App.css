@@ -53,7 +53,7 @@
 }
 
 .SideBarHeaderIcons {
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
   justify-content: space-between;
   flex:1;
@@ -72,24 +72,29 @@
   height: 100%;
   border-radius: 5px;
   border: 1px solid #ddd;
-  font-size: 20px;
+  font-size: 14px;
   padding-left: 10px;
   box-sizing: border-box;
 }
 
 .ContactsList {
-  height: 100%;
+  height: 80%;
   border: 1px solid #ccc;
   border-top: none;
-  
+  overflow-y: scroll;
 }
 
 .Contact {
   border-bottom: 1px solid #ccc;
   display: flex;
   flex-direction: row; 
-  height: 90px;
+  height: 60px;
   padding: 10px;
+}
+
+
+.Contact:last-child {
+  border-bottom: none;
 }
 
 .ContactAvi {
@@ -111,50 +116,148 @@
   border-left: none;
 }
 
+.GroupAvi {
+  flex:1;
+}
+.GroupDetails {
+  flex:5;
+
+}
+.GroupDetailsName {
+  font-size: 12px;
+  font-weight: bold;
+  display: block;
+}
+.GroupDetailsMembers {
+  display: block;
+  color: #bbb;
+  font-size: 10px;
+  margin-top: 4px; 
+}
+.GroupIcons {
+  flex:1;
+}
+
 .Chats {
-  height: 90%;
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  padding: 10px;
+  box-sizing: border-box;
   overflow-y: scroll;
 }
 
-.Chat {
-
+.talk-bubble {
+	margin: 20px;
+  display: block;
+  position: relative;
+	width: 250px;
+	height: auto;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 3px;
 }
+
+/* Right triangle placed top left flush. */
+
+.tri-right.left-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -20px;
+	right: auto;
+  top: 3px;
+	bottom: auto;
+	border: 22px solid;
+	border-color: #fff transparent transparent transparent;
+}
+
+.tri-right.right-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -20px;
+  top: 3px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: lightyellow transparent transparent transparent;
+}
+/* talk bubble contents */
+.talktext{
+  padding: 1em;
+	text-align: left;
+  line-height: 1.5em;
+}
+.talktext p{
+  /* remove webkit p margins */
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+}
+
+/* .Chat {
+
+} */
 
 .ChatUserName {
-
+  font-weight: bold;
+  font-size:10px;
+  color: blue;
+  text-transform:capitalize;
+  margin-bottom: 2px;
 }
 
-.ChatMessage {
-
+.sender {
+  align-self: flex-end;
 }
+
+
+/* .ChatMessage {
+
+} */
 
 .ChatInputBar {
   height: 10%;
   border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 10px;
+  justify-content: center;
 }
 
-.ChatInputBar {
-
-}
 
 .Smileys {
-
+  flex: 1;
+  margin-right: 20px;
+  text-align: right;
 }
 
 .ChatInput {
-
+  flex: 5;
 }
 
 .ChatBox {
-
+  width: 100%;
+  height: 80%;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 20px;
+  padding-left: 10px;
+  box-sizing: border-box;
 }
 
 .Microphone {
-
+  flex: 1;
+  margin-left: 20px;
 }
 
-
-
+.dateMsg {
+  font-size:9px;
+  text-align: right;
+}
 
 
 /* @keyframes App-logo-spin {
