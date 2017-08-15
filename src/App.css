@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    color: #4b4b4b;
+
+}
+
+.WhatsApp {
+  display: flex;
+  flex-direction: row;
+  height: 98vh;
+  background: #eee;
+  /* border: 1px solid #ccc; */
+}
+
+
+.MainChat {
+  /* height: 100%; */
+  border:0;
+  flex-direction: column;
+  flex: 2;
+  box-sizing: content-box;
+}
+
+.SideBar {
+  border:0;
+  
+  flex:1;
+  flex-direction: column;
+  box-sizing: content-box;
+  /* justify-content: space-between; */
+  /* padding: 20px 40px; */
+}
+
+.SideBarHeader {
+  height: 50px;
+  padding:10px;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #ccc;
+}
+
+.SideBarHeaderAvi {
+  /* color: #ccc;
+  padding: 10px; */
+  flex:1;
+}
+
+.SideBarHeaderUserName {
+  color: #333;
+  padding: 10px;
+  flex:2;
+}
+
+.SideBarHeaderIcons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex:1;
+}
+
+.SideBarSearch {
+  height: 40px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-top: none;
+  
+}
+
+.searchBox {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 20px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.ContactsList {
+  height: 100%;
+  border: 1px solid #ccc;
+  border-top: none;
+  
+}
+
+.Contact {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-direction: row; 
+  height: 90px;
+  padding: 10px;
+}
+
+.ContactAvi {
+  flex:0
+}
+
+.ContactName {
+  flex:1;
+  margin-left:10px;
+}
+
+
+.MainChatHeader {
+  height: 50px;
+  padding:10px;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #ccc;
+  border-left: none;
+}
+
+.Chats {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+.Chat {
+
+}
+
+.ChatUserName {
+
+}
+
+.ChatMessage {
+
+}
+
+.ChatInputBar {
+  height: 10%;
+  border-top: 1px solid #ccc;
+}
+
+.ChatInputBar {
+
+}
+
+.Smileys {
+
+}
+
+.ChatInput {
+
+}
+
+.ChatBox {
+
+}
+
+.Microphone {
+
+}
+
+
+
+
+
+/* @keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+} */
