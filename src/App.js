@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { Grid,Image, List } from 'semantic-ui-react'
+import { Input,Icon } from 'semantic-ui-react'
 import './App.css';
 
 class App extends Component {
@@ -31,7 +31,9 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {items:[],messages:[],newMessage:""};
+
+    this.state = {items:[],messages:[],newMessage:'',sendButton:'unmute'};
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
@@ -46,7 +48,7 @@ class App extends Component {
     })
 
 
-    fetch("https://whatsappdemo.herokuapp.com/api/message/all").then(res => {
+    fetch("https://whatsappdemo.herokuapp.com/api/message/allwithusers").then(res => {
       return res.json()
     }).then(data => {
       //console.log(data)
@@ -55,14 +57,47 @@ class App extends Component {
 
   }
 
-  handleSubmit(event) {
+  // getUserName(userId) {
+  //   fetch("https://whatsappdemo.herokuapp.com/api/accounts/"+userId).then(res => {
+  //     return res.json()
+  //   }).then(data => {
+  //     console.log(data.info.fullname)
+  //     return data.info.fullname;
+  //   })
+  // }
+
+  postMessage(messageby,message) {
+    let postData = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({messageby: messageby, message: message})
+    };
+
+    fetch("https://whatsappdemo.herokuapp.com/api/message/new",postData).then(res => {
+      return res.json()
+    }).then(data => {
+      console.log(data)
+      //return data.info.fullname;
+    })
+
+  }
+   
+  handleSubmit(event, currentUser) {
+    //console.log(event, data)
     event.preventDefault();
-    this.state.messages.push({messageby: 'Segebee',message:this.state.newMessage,createdAt: Date.now() });
+    this.setState({sendButton: 'unmute'});
+    this.state.messages.push({messageby: {"_id":currentUser._id,"fullname":currentUser.fullname},message:this.state.newMessage,createdAt: Date.now() });
     //upload new message
+    this.postMessage(currentUser._id,this.state.newMessage)
+    //reset state
     this.setState({newMessage: ''});
   }
   
   handleChange(event) {
+    this.setState({sendButton: 'send'});
     this.setState({newMessage: event.target.value});
   }
 
@@ -70,9 +105,27 @@ class App extends Component {
   getTime(time) {
     time = new Date(time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     return time;
-    
-    // let times = time.split(":");
-    // return time = times[0]+":"+times[1];
+  }
+
+  isSender(item,currentUser) {
+
+    console.log("item:",item)
+    //console.log("currentUser",currentUser)
+    //validate ids are present
+    if (!item.messageby) return;
+    if (!currentUser._id === null) return;
+
+    if (item.messageby._id === currentUser._id) return "sender right-top ";
+
+    return "left-top ";
+  }
+
+  //get random colors
+  getRandomColor() {
+    const colors = ["#ea960d","#ca28eb","#72cef6","#67ab18"];
+
+    let chosen = Math.random() * colors.length;
+    return colors[parseInt(chosen)];
   }
 
 
@@ -83,26 +136,33 @@ class App extends Component {
 
     let currentUser = "";
 
-    if (contacts[0]) { currentUser = contacts[0].fullname; }
+    if (contacts[0]) { currentUser = contacts[0]; }
     //if (currentUser) console.log(currentUser);
     
     let members = contacts.map(contact => (contact.shortname));
-    members = members.join();
+    members = members.join().substring(0,50);
+    members += "...";
 
-    let chats = messages.map(item => (
-                  <div className="talk-bubble tri-right left-top">
-                    <div className="ChatUserName">
-                      {item.messageby}
-                    </div>
+    let filteredChats = messages.filter( 
+      (message) => (message.messageby && message.message)
+    )
 
-                    <div className="talk-text">
-                      <p>{item.message}</p>
-                      
-                      <p className="dateMsg">{ this.getTime(item.createdAt) }</p>
-                    </div>
-                  </div>
-              
-              ))
+    let chats = filteredChats.map(item => (
+
+
+      <div className={"talk-bubble tri-right "+ this.isSender(item,currentUser)} >
+        <div className="ChatUserName" style={{color:this.getRandomColor()}}>
+          {item.messageby.fullname}
+        </div>
+
+        <div className="talk-text">
+          <p>{item.message}</p>
+          
+          <p className="dateMsg">{ this.getTime(item.createdAt) }</p>
+        </div>
+      </div>
+  
+    ));
     
     //console.log(members);
 
@@ -112,26 +172,28 @@ class App extends Component {
         <div className="SideBar">
           <div className="SideBarHeader">
             <div className="SideBarHeaderAvi">
-              <img src="http://placehold.it/40x40" />
+              <img src="/images/oval.jpg" width="50px" height="50px" />
             </div>
             <div className="SideBarHeaderUserName">
-              {currentUser}
+              {currentUser.fullname}
             </div>
             <div className="SideBarHeaderIcons">
-              <img src="http://placehold.it/30x30" />
-              <img src="http://placehold.it/30x30" />
+              <Icon name='edit' size="large" />
+
+              <Icon name='angle down' size="large" />
             </div>
           </div>
           <div className="SideBarSearch">
-            <input type="text" className="searchBox" placeholder="Search or start new chats" />
+            <Input icon="search" iconPosition="left" placeholder="Search contacts" />
+            
           </div>
           <div className="ContactsList">
            
             {
-              this.state.items.map(contact => (
+              this.state.items.map(contact => (   
                 <div className="Contact" key={contact._id} >
                   <div className="ContactAvi">
-                    <img src="http://placehold.it/40x40" />
+                    <img src={`http://loremflickr.com/g/200/200/love/all?random=${contact._id}`} width="50" height="50" />
                   </div>
                   <div className="ContactName">
                     {contact.fullname}
@@ -151,7 +213,7 @@ class App extends Component {
 
           <div className="MainChatHeader">
             <div className="GroupAvi">
-              <img src="http://placehold.it/40x40" />
+              <Icon circular inverted color='teal' size="large" name='users' />
             </div>
             <div className="GroupDetails">
               <div className="GroupDetailsName"> 
@@ -162,9 +224,9 @@ class App extends Component {
               </div>
             </div>
             <div className="GroupIcons">
-              <img src="http://placehold.it/40x40" />
-              <img src="http://placehold.it/40x40" />
-              <img src="http://placehold.it/40x40" />
+              <Icon size="large" name='search' />
+              <Icon size="large" name='attach' />
+              <Icon size="large" name='angle down' />
             </div>
           </div>
 
@@ -179,15 +241,15 @@ class App extends Component {
 
           <div className="ChatInputBar">
             <div className="Smileys">
-              <img src="http://placehold.it/40x40" />
+              <Icon size="large" name='smile' />
             </div>
             <div className="ChatInput">
-              <form onSubmit={this.handleSubmit}>
-                <input className="ChatBox" value={this.state.value} onChange={this.handleChange}  />
+              <form onSubmit={ (e) => this.handleSubmit(e,currentUser)}>
+                <input className="ChatBox" value={this.state.newMessage} onChange={this.handleChange}  />
               </form>
             </div>
             <div className="Microphone">
-              <img src="http://placehold.it/40x40" />
+              <Icon size="large" name={this.state.sendButton} />
             </div>
           </div>
 

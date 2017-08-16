@@ -42,7 +42,7 @@
 .SideBarHeaderAvi {
   /* color: #ccc;
   padding: 10px; */
-  flex:1;
+  flex:0;
 }
 
 .SideBarHeaderUserName {
@@ -54,7 +54,7 @@
 .SideBarHeaderIcons {
   /* display: flex; */
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-around; */
   flex:1;
 }
 
@@ -97,7 +97,11 @@
 }
 
 .ContactAvi {
-  flex:0
+  flex:0;
+}
+
+img {
+  border-radius: 100%;
 }
 
 .ContactName {
@@ -116,11 +120,13 @@
 }
 
 .GroupAvi {
-  flex:1;
+  flex:0;
 }
-.GroupDetails {
-  flex:5;
 
+
+.GroupDetails {
+  flex:3;
+  padding-left:10px;
 }
 .GroupDetailsName {
   font-size: 12px;
@@ -135,6 +141,7 @@
 }
 .GroupIcons {
   flex:1;
+  align-items: flex-end;
 }
 
 .Chats {
@@ -144,17 +151,24 @@
   padding: 10px;
   box-sizing: border-box;
   overflow-y: scroll;
+  color: #4a4a4a;
+  background: url('/images/chatsbg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  margin:0;
 }
 
 .talk-bubble {
-	margin: 20px;
+	margin: 5px 20px;
   display: block;
   position: relative;
 	width: 250px;
 	height: auto;
   background-color: #fff;
   padding: 15px;
-  border-radius: 3px;
+  font-size: 12px;
+  border-radius: 5px;
 }
 
 /* Right triangle placed top left flush. */
@@ -184,6 +198,18 @@
 	border: 20px solid;
 	border-color: lightyellow transparent transparent transparent;
 }
+.tri-right.sender.right-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -20px;
+  top: 3px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #b9f38a transparent transparent transparent;
+}
 /* talk bubble contents */
 .talktext{
   padding: 1em;
@@ -210,7 +236,11 @@
 
 .sender {
   align-self: flex-end;
+  background-color: #b9f38a;
 }
+ .sender .ChatUserName {
+  display: none;
+} 
 
 
 /* .ChatMessage {
@@ -224,7 +254,8 @@
   flex-direction: row;
   box-sizing: border-box;
   padding: 10px;
-  justify-content: center;
+  /* justify-content: center; */
+  align-items: center;
 }
 
 
@@ -232,10 +263,12 @@
   flex: 1;
   margin-right: 20px;
   text-align: right;
+  height: 100%;
 }
 
 .ChatInput {
   flex: 5;
+  height: 100%;
 }
 
 form {
@@ -255,6 +288,7 @@ form {
 .Microphone {
   flex: 1;
   margin-left: 20px;
+  height: 100%;
 }
 
 .dateMsg {
