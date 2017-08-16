@@ -97,7 +97,7 @@ class App extends Component {
   }
   
   handleChange(event) {
-    this.setState({sendButton: 'send'});
+    this.setState({sendButton: 'send outline'});
     this.setState({newMessage: event.target.value});
   }
 
