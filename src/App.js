@@ -8,42 +8,7 @@ class App extends Component {
   //   super(props);
   //   this.state = {
   //     contacts: [
-  //       {
-  //         "id": 1,
-  //         "profilePhoto" : "http://www.joshfinnie.com/assets/images/josh-tm.jpeg",
-  //         "name": "Gbenga",
-  //         "lastMessage": "Bro smart: what i think this should be...",
-  //         "chats": [
-  //           {
-  //             "activeUser" : "i will come to school soon",
-  //             "receiver":  "i will be there too.. just give me few minutes"
-  //           }
-  //         ]
-  //       },
-  //       {
-  //         "id": 2,
-  //         "profilePhoto" : "http://loremflickr.com/g/320/240/paris",
-  //         "name": "Tayo",
-  //         "lastMessage": "Bro smart: what i think this should be...",
-  //         "chats": [
-  //           {
-  //             "activeUser" : "i will come to school soon",
-  //             "receiver":  "i will be there too.. just give me few minutes"
-  //           }
-  //         ]
-  //       },
-  //       {
-  //         "id": 3,
-  //         "profilePhoto" : "https://s.yimg.com/pw/images/buddyicon11_r.png#76029035@N02",
-  //         "name": "uno",
-  //         "lastMessage": "Bro smart: what i think this should be...",
-  //         "chats": [
-  //           {
-  //             "activeUser" : "i will come to school soon",
-  //             "receiver":  "i will be there too.. just give me few minutes"
-  //           }
-  //         ]
-  //       },
+  //       
       
   //     ]
   //   }
@@ -64,28 +29,19 @@ class App extends Component {
   //    this.setState({ chatHistoryVisible: true, selectedChat: id, selectedContactChat: chat });
   //  }
 
-
-
-  // render() {
-  //   const { contacts, chatHistoryVisible, selectedContactChat } = this.state;
-  //   return (
-  //     <div className="app">
-  //         <ChatList contacts={ contacts } getChats={ this.getChats }/>
-  //         <View visibility={ chatHistoryVisible } selectedContact={ selectedContactChat }/>
-  //     </div>
-  //   );
-  // }
-
-
   constructor() {
-    super()
-    this.state = {items:[],messages:[]}
+    super();
+    this.state = {items:[],messages:[],newMessage:""};
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+
   }
+
   componentWillMount() {
     fetch("https://whatsappdemo.herokuapp.com/api/accounts/all").then(res => {
       return res.json()
     }).then(data => {
-      console.log(data)
+      //console.log(data)
       this.setState({items: data})
     })
 
@@ -93,20 +49,63 @@ class App extends Component {
     fetch("https://whatsappdemo.herokuapp.com/api/message/all").then(res => {
       return res.json()
     }).then(data => {
-      console.log(data)
+      //console.log(data)
       this.setState({messages: data})
     })
 
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
+    this.state.messages.push({messageby: 'Segebee',message:this.state.newMessage,createdAt: Date.now() });
+    //upload new message
+    this.setState({newMessage: ''});
   }
-   
+  
+  handleChange(event) {
+    this.setState({newMessage: event.target.value});
+  }
+
+  //return time wout secs
+  getTime(time) {
+    time = new Date(time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return time;
+    
+    // let times = time.split(":");
+    // return time = times[0]+":"+times[1];
+  }
 
 
   render() {
+    
+    const contacts = this.state.items;
+    const messages = this.state.messages;
+
+    let currentUser = "";
+
+    if (contacts[0]) { currentUser = contacts[0].fullname; }
+    //if (currentUser) console.log(currentUser);
+    
+    let members = contacts.map(contact => (contact.shortname));
+    members = members.join();
+
+    let chats = messages.map(item => (
+                  <div className="talk-bubble tri-right left-top">
+                    <div className="ChatUserName">
+                      {item.messageby}
+                    </div>
+
+                    <div className="talk-text">
+                      <p>{item.message}</p>
+                      
+                      <p className="dateMsg">{ this.getTime(item.createdAt) }</p>
+                    </div>
+                  </div>
+              
+              ))
+    
+    //console.log(members);
+
     return (
       <div className="WhatsApp">
 
@@ -116,7 +115,7 @@ class App extends Component {
               <img src="http://placehold.it/40x40" />
             </div>
             <div className="SideBarHeaderUserName">
-              Segun Abisagbo
+              {currentUser}
             </div>
             <div className="SideBarHeaderIcons">
               <img src="http://placehold.it/30x30" />
@@ -130,16 +129,16 @@ class App extends Component {
            
             {
               this.state.items.map(contact => (
-              <div className="Contact" key={contact._id} >
-                <div className="ContactAvi">
-                  <img src="http://placehold.it/40x40" />
+                <div className="Contact" key={contact._id} >
+                  <div className="ContactAvi">
+                    <img src="http://placehold.it/40x40" />
+                  </div>
+                  <div className="ContactName">
+                    {contact.fullname}
+                    <p>{contact.phone}</p>
+                  </div>
+                  
                 </div>
-                <div className="ContactName">
-                  {contact.fullname}
-                  <p>{contact.phone}</p>
-                </div>
-                
-              </div>
               ))
             }
             
@@ -159,7 +158,7 @@ class App extends Component {
                 TSS Devs
               </div>
               <div className="GroupDetailsMembers"> 
-                Joseph, Muyiwa
+                { members }
               </div>
             </div>
             <div className="GroupIcons">
@@ -171,21 +170,7 @@ class App extends Component {
 
           <div className="Chats">
             
-            {
-              this.state.messages.map(item => (
-                <div className="talk-bubble tri-right left-top">
-                  <div className="ChatUserName">
-                    {item.messageby}
-                  </div>
-
-                  <div className="talk-text">
-                    <p>{item.message}</p>
-                    <p className="dateMsg">{new Date(item.createdAt).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              
-              ))
-            }
+            { chats }
             
             
             
@@ -198,7 +183,7 @@ class App extends Component {
             </div>
             <div className="ChatInput">
               <form onSubmit={this.handleSubmit}>
-                <input className="ChatBox" />
+                <input className="ChatBox" value={this.state.value} onChange={this.handleChange}  />
               </form>
             </div>
             <div className="Microphone">
